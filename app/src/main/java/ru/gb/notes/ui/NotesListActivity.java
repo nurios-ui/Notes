@@ -1,20 +1,28 @@
 package ru.gb.notes.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import ru.gb.notes.R;
+import ru.gb.notes.data.Constants;
 import ru.gb.notes.data.InMemoryRepoImpl;
 import ru.gb.notes.data.Note;
 import ru.gb.notes.data.Repo;
+import ru.gb.notes.recycler.NotesAdapter;
 
-public class NotesListActivity extends AppCompatActivity {
+public class NotesListActivity extends AppCompatActivity implements NotesAdapter.OnNoteClickListener {
 
-    private Repo repository = new InMemoryRepoImpl();
+  //  private Repo repository = new InMemoryRepoImpl();
+    private Repo repository = InMemoryRepoImpl.getInstance();
     private RecyclerView list;
+    private NotesAdapter adapter;
 
 
     @Override
@@ -24,8 +32,14 @@ public class NotesListActivity extends AppCompatActivity {
 
         fillRepo();
 
+        adapter = new NotesAdapter();
+        adapter.setNotes(repository.getAll());
+
+        adapter.setOnNoteClickListener(this);
+
         list = findViewById(R.id.list);
         list.setLayoutManager(new LinearLayoutManager(this));
+        list.setAdapter(adapter);
     }
 
     private void fillRepo() {
@@ -36,5 +50,37 @@ public class NotesListActivity extends AppCompatActivity {
         repository.create(new Note("Title 5", "Description 5"));
         repository.create(new Note("Title 6", "Description 6"));
         repository.create(new Note("Title 7", "Description 7"));
+        repository.create(new Note("Title 8", "Description 8"));
+        repository.create(new Note("Title 9", "Description 9"));
+        repository.create(new Note("Title 10", "Description 10"));
+        repository.create(new Note("Title 11", "Description 11"));
+        repository.create(new Note("Title 12", "Description 12"));
+        repository.create(new Note("Title 13", "Description 13"));
+        repository.create(new Note("Title 14", "Description 14"));
+    }
+
+    @Override
+    public void onNoteClick(Note note) {
+        Intent intent = new Intent(this, EditNoteActivity.class);
+        intent.putExtra(Constants.NOTE, note);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.main_create:
+
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

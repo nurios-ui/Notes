@@ -1,8 +1,25 @@
 package ru.gb.notes.data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class InMemoryRepoImpl implements Repo {
+
+    private static InMemoryRepoImpl repo;
+
+    public static Repo getInstance()
+    {
+        if(repo == null)
+        {
+            repo = new InMemoryRepoImpl();
+        }
+        return repo;
+    }
+
+    private InMemoryRepoImpl()
+    {
+
+    }
 
     private ArrayList<Note> notes = new ArrayList<>();
     private int counter = 0;
@@ -45,5 +62,10 @@ public class InMemoryRepoImpl implements Repo {
                 break;
             }
         }
+    }
+
+    @Override
+    public List<Note> getAll() {
+        return notes;
     }
 }
